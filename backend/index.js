@@ -5,7 +5,9 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+
+// Resolve paths correctly for Vercel
 const DATA_DIR = path.join(__dirname, 'data');
 const MENU_FILE = path.join(DATA_DIR, 'menu.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
@@ -22,7 +24,13 @@ const readData = (file) => {
 
 // Helper to write data
 const writeData = (file, data) => {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  // on Vercel, this will only write to ephemeral storage and won't persist
+  // but we keep it for local development
+  try {
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  } catch (e) {
+    console.error("Write failed (expected on readonly fs):", e);
+  }
 };
 
 // GET /api/menu
@@ -113,7 +121,7 @@ app.post('/api/admin/menu', (req, res) => {
       };
       menu.push(newItem);
     }
-    
+
     writeData(MENU_FILE, menu);
     res.json({ success: true, message: 'Menu updated' });
   } catch (error) {
@@ -121,6 +129,12 @@ app.post('/api/admin/menu', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Start server if not running in serverless mode
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;

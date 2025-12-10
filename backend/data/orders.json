@@ -100,5 +100,27 @@
     "total": 38.480000000000004,
     "createdAt": "2025-12-10T06:00:01.851Z",
     "status": "placed"
+  },
+  {
+    "orderId": "82a37a09-6e5b-40f1-9005-ce62d089b6c3",
+    "customer": {
+      "name": "fgd",
+      "phone": "34242342342",
+      "address": "dfsdfsd"
+    },
+    "items": [
+      {
+        "id": "2",
+        "name": "Hyderabadi Biryani",
+        "description": "Aromatic basmati rice cooked with tender chicken and spices.",
+        "price": 15.5,
+        "category": "Main",
+        "imageUrl": "/images/biryani.png",
+        "qty": 5
+      }
+    ],
+    "total": 77.5,
+    "createdAt": "2025-12-10T07:31:00.661Z",
+    "status": "placed"
   }
 ]
